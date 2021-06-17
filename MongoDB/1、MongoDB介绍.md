@@ -83,3 +83,45 @@ mongo和传统型数据库相比,最大的不同:
 mongo文档型数据库: 表下的每篇文档,都可以有自己独特的结构(json对象都可以有自己独特的属性和值)，可以将传统关系型数据库的一对多关系直接用JSON嵌套存储。
 
 ​		memcached 、redis都是key-value型数据库，用于缓存，不支持持久化(redis有aof和rdb的持久化方式，但是是为了崩溃恢复而不是数据的持久化)。redis的value支持多种数据类型，但是涉及到各种序列化方式，有一些序列化方式不支持部分操作，比如Java客户端框架默认的jdk序列化方式不支持自增自减，key的string序列化方式不支持scan操作。redis和Memcached不支持ACID事务，redis的订阅发布模型和key-value是不同的键空间，不支持节点间同步。Memcached适合比较大的字符串缓存。MongoDB适合海量数据处理，对聚合、集群支持比较好，可以完成简单的搜索任务，涉及到复杂的搜索还是要依靠Elasticsearch等专门的搜索引擎。
+
+
+
+​		MongoDB分为社区版和企业版，社区版免费并且开放[源码](https://github.com/mongodb/mongo)，MongoDB企业版提供综合支持，相比于社区版添加了企业关注的特性，比如LDAP、Kerberos支持、磁盘加密和审计等。
+
+
+
+##### 文档数据库
+
+​		MongoDB中的一条记录就是一个由键值对组成的数据结构的文档。MongoDB文档和JSON对象特别相似，属性值可以是其他的文档，比如数组、文档数组。
+
+​		使用文档的优势
+
+​		1、文档(比如对象)对应许多编程语言原生的数据类型
+
+​		2、嵌入式的文档和数组减少了昂贵的联结必要
+
+​		3、动态模式支持流畅的多态性。
+
+
+
+##### 集合/视图
+
+MongoDB使用集合存储文档，集合类似关系型数据库的表。另外集合支持只读的视图(3.4版本开始)，随机应变的物化的视图(4.2版本开始支持)。
+
+
+
+##### 主要特点
+
+**高性能**	MongoDB的副本集提供自动故障转移、数据冗余。一个副本集合是一组维护相同数据集的MongoDB服务器，提供数据冗余，增加了数据可用性
+
+**水平可伸缩性**  MongoDB提供水平可伸缩性作为核心功能，分片功能在一个机器集群间分配数据。从3.4版本开始，MongoDB支持创建基于shard key的数据区域。在一个平衡的集群中，MongoDB可以在数据区域内的分片上直接读写。
+
+
+
+##### 支持多存储引擎
+
+[WiredTiger](https://docs.mongodb.com/manual/core/wiredtiger/) 存储引擎(默认的存储引擎，包括[Encryption at rest](https://docs.mongodb.com/manual/core/security-encryption-at-rest/))
+
+[内存存储引擎](https://docs.mongodb.com/manual/core/inmemory/)
+
+另外MongoDB提供可插入的存储引擎API，允许第三方为MongoDB开发存储引擎。
