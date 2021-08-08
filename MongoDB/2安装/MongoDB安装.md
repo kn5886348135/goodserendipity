@@ -116,3 +116,14 @@ IP绑定的更多信息参考 [IP Binding](https://docs.mongodb.com/manual/core/
 10、MongoDB分为mongod、mongos进程
 
 11、MongoDB卸载步骤略。
+
+12、MongoDB社区版安装包
+
+MongoDB社区版安装包可以从它自己专用的仓库获取，包含很多官方支持的安装包
+
+| Package Name           | Description                                                  |
+| :--------------------- | :----------------------------------------------------------- |
+| `mongodb-org`          | A `metapackage` that automatically installs the component packages listed below. |
+| `mongodb-org-database` | A `metapackage` that automatically installs the component packages listed below.Package NameDescription`mongodb-org-server`Contains the [`mongod`](https://docs.mongodb.com/manual/reference/program/mongod/#mongodb-binary-bin.mongod) daemon, associated init script, and a [configuration file](https://docs.mongodb.com/manual/reference/configuration-options/#std-label-conf-file) (`/etc/mongod.conf`). You can use the initialization script to start [`mongod`](https://docs.mongodb.com/manual/reference/program/mongod/#mongodb-binary-bin.mongod) with the configuration file. For details, see the "Run MongoDB Community Edition" section, above.`mongodb-org-mongos`Contains the [`mongos`](https://docs.mongodb.com/manual/reference/program/mongos/#mongodb-binary-bin.mongos) daemon.`mongodb-org-shell`Contains the legacy [`mongo`](https://docs.mongodb.com/manual/reference/program/mongo/#mongodb-binary-bin.mongo) shell. |
+| `mongodb-mongosh`      | Contains the MongoDB Shell ([`mongosh`](https://docs.mongodb.com/mongodb-shell/#mongodb-binary-bin.mongosh)). |
+| `mongodb-org-tools`    | A `metapackage` that automatically installs the component packages listed below:Package NameDescription`mongodb-database-tools`Contains the following MongoDB database tools:[`mongodump`](https://docs.mongodb.com/database-tools/mongodump/#mongodb-binary-bin.mongodump)[`mongorestore`](https://docs.mongodb.com/database-tools/mongorestore/#mongodb-binary-bin.mongorestore)[`bsondump`](https://docs.mongodb.com/database-tools/bsondump/#mongodb-binary-bin.bsondump)[`mongoimport`](https://docs.mongodb.com/database-tools/mongoimport/#mongodb-binary-bin.mongoimport)[`mongoexport`](https://docs.mongodb.com/database-tools/mongoexport/#mongodb-binary-bin.mongoexport)[`mongostat`](https://docs.mongodb.com/database-tools/mongostat/#mongodb-binary-bin.mongostat)[`mongotop`](https://docs.mongodb.com/database-tools/mongotop/#mongodb-binary-bin.mongotop)[`mongofiles`](https://docs.mongodb.com/database-tools/mongofiles/#mongodb-binary-bin.mongofiles)`mongodb-org-database-tools-extra`Contains the [`install_compass`](https://docs.mongodb.com/manual/reference/program/install_compass/#std-label-install-compass) script |
