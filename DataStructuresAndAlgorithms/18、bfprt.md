@@ -1,0 +1,63 @@
+---
+title: bfprt
+author: Louis
+date: 2023-04-18 19:37:33
+categories: 数据结构与算法
+tags: [bfprt,Reservoir Sampling]
+---
+
+#### bfprt算法
+
+&emsp;&emsp;[中位数的中位数](https://en.wikipedia.org/wiki/Median_of_medians) 也叫bfprt算法，利用中位数的中位数确定荷兰国旗问题的pivot，用于求解第k大数的问题，时间复杂度为O(N)。
+
+1. 将整个序列划分为 $\frac{N}{5}$ 组，每组元素数不超过5个；
+2. 寻找每组元素的中位数（因为元素个数较少，可以直接使用插入排序 等算法）；
+3. 找出这组元素中位数中的中位数。将该元素作为每次partition时的分界值pivot；
+4. 按照荷兰国旗问题的partition过程确定k。
+
+#### 蓄水池算法
+
+&emsp;&emsp;[蓄水池算法](https://en.wikipedia.org/wiki/Reservoir_sampling)(Reservoir sampling)是一系列随机算法，用于从未知大小 n 的总体中一次性选择 k 个项目的简单随机样本，无需放回。 总体 n 的大小对于算法来说是未知的，并且通常对于所有 n 个项目都太大而无法放入内存。当前只考虑等概率获取k个样本。
+&emsp;&emsp;证明过程，假设当前来到第i个元素，蓄水池大小为k，需要证明池中元素不被替换的概率、池外的元素进池子并且不被替换的概率都是$\frac{k}{n}$
+
+1. i &le; k
+    1. k步之前i被选中的概率是1
+    2. 走到k+1步时，i被第k+1个元素替换的概率 = 第k+1个元素被选中的概率 $\times$ i被选中的概率，$\frac{k}{k+1} \times \frac{1}{k}$，k+1个元素中选取k个元素，每个元素被选中的概率就是$\frac{1}{k+1} \times k$。i不被第k+1个元素替换的概率就是$1- \frac{1}{k+1}$=$\frac{k}{k+1}$。依次类推，i不被第k+2个元素替换的概率为$1- \frac{k}{k+2} \times \frac{1}{k}$=$\frac{k+1}{k+2}$，当递推到第n个元素时，i被保留的概率
+$$\frac{k}{k+1} \times \frac{k+1}{k+2} \times \frac{k+1}{k+2} \times \dots \times \frac{n-2}{n-1} \times \frac{n-1}{n} = \frac{k}{n}$$
+1. j &gt; k
+   1. j被选中的概率是\frac{k}{j}$
+   2. 不被第j+1个元素替换的概率是$1- \frac{k}{j+1} \times \frac{1}{k}$=$\frac{j}{j+1}$，递推到第n个元素，j被保留的概率=j被选中的概率$\times$j不被替换的概率
+$$\frac{k}{j} \times \frac{j}{j+1} \times \frac{j+1}{j+2} \times \dots \times \frac{n-2}{n-1} \times \frac{n-1}{n} = \frac{k}{n}$$
+
+---
+
+##### 在无序数组中求第K小的数
+
+- 大根堆 O(N)
+  - 数组的前k个元素入堆
+  - 遍历数组，堆顶比当前元素小则弹出堆顶，并且当前元素入堆
+  - 返回堆顶
+- 改写快排 O(N)
+  - 在left ${ \dots }$ right区间随机获取pivot
+  - 根据pivot进行荷兰国旗问题partition
+  - k在小于区域则递归对左边进行partition
+  - k在大于区域则递归对右边进行partition
+  - k在等于区域则返回等于区域边界
+  - 时间复杂度的证明涉及计算概率期望值
+- bfprt算法 O(N)
+  - 和改写快排相同，但是使用中位数的中位数作为pivot；
+  - 获取中位数的中位数的过程中，不改变原数组，只有在partition过程中才产生交换。bfprt每次交换后都会排除 $\frac{3 \times N}{10}$ 个元素；
+  - 时间复杂度的[证明](https://next.oi-wiki.org/basic/quick-sort/#%E6%94%B9%E8%BF%9B%E4%B8%AD%E4%BD%8D%E6%95%B0%E4%B8%AD%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0)。
+
+##### topK
+
+&emsp;&emsp;给定一个无序数组arr中，长度为N，给定一个正数k，返回top k个最大的数。
+
+- O(N ${ \times }$ logN)&emsp;&emsp;&emsp;升序排序，取最大的k个
+- O(N + K ${ \times }$ logN)&emsp;自定义大根堆，从希望上建立大根堆，将最大的k个数交换到数组末尾
+- O(n + k ${ \times }$ logk)&emsp;&emsp;拿到第len-k小的数num，遍历数组收集大于num的数，补齐等于num的数
+
+##### 蓄水池算法
+
+&emsp;&emsp;假设有一个源源吐出不同球的机器，只有装下10个球的袋子，每一个吐出的球，要么放入袋子，要么永远扔掉。如何做到机器吐出每一个球之后，所有吐出的球都等概率被放进袋子里。
+&emsp;&emsp;对k之前和之后的元素，按照被保留的概率 = 被选中的概率$\times$不被替换的概率，对每一个新输入的元素按照概率进行替换。
