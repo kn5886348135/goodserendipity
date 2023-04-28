@@ -3,7 +3,7 @@ title: bfprt
 author: Louis
 date: 2023-04-18 19:37:33
 categories: 数据结构与算法
-tags: [bfprt,Reservoir Sampling]
+tags: [bfprt]
 ---
 
 #### bfprt算法
@@ -14,26 +14,6 @@ tags: [bfprt,Reservoir Sampling]
 2. 寻找每组元素的中位数（因为元素个数较少，可以直接使用插入排序 等算法）；
 3. 找出这组元素中位数中的中位数。将该元素作为每次partition时的分界值pivot；
 4. 按照荷兰国旗问题的partition过程确定k。
-
-#### 蓄水池算法
-
-&emsp;&emsp;[蓄水池算法](https://en.wikipedia.org/wiki/Reservoir_sampling)(Reservoir sampling)是一系列随机算法，用于从未知大小 n 的总体中一次性选择 k 个项目的简单随机样本，无需放回。 总体 n 的大小对于算法来说是未知的，并且通常对于所有 n 个项目都太大而无法放入内存。当前只考虑等概率获取k个样本。蓄水池算法的应用场景有抽奖、发放唯一id等。
-
-1. 某一天第一次登录的用户等概率获奖
-2. 每一级服务器都维护一个区间的唯一id，下限是base，上限范围是range。可以减小向上一级服务器的交互次数，根服务器可能少到一天交互一次，每一级服务器做集群加备份保证高可用性。
-
-##### 证明
-
-&emsp;&emsp;假设当前来到第i个元素，蓄水池大小为k，需要证明池中元素不被替换的概率、池外的元素进池子并且不被替换的概率都是$\frac{k}{n}$
-
-1. i &le; k
-    1. k步之前i被选中的概率是1
-    2. 走到k+1步时，i被第k+1个元素替换的概率 = 第k+1个元素被选中的概率 $\times$ i被选中的概率，$\frac{k}{k+1} \times \frac{1}{k}$，k+1个元素中选取k个元素，每个元素被选中的概率就是$\frac{1}{k+1} \times k$。i不被第k+1个元素替换的概率就是$1- \frac{1}{k+1}$=$\frac{k}{k+1}$。依次类推，i不被第k+2个元素替换的概率为$1- \frac{k}{k+2} \times \frac{1}{k}$=$\frac{k+1}{k+2}$，当递推到第n个元素时，i被保留的概率
-$$\frac{k}{k+1} \times \frac{k+1}{k+2} \times \frac{k+1}{k+2} \times \dots \times \frac{n-2}{n-1} \times \frac{n-1}{n} = \frac{k}{n}$$
-1. j &gt; k
-   1. j被选中的概率是\frac{k}{j}$
-   2. 不被第j+1个元素替换的概率是$1- \frac{k}{j+1} \times \frac{1}{k}$=$\frac{j}{j+1}$，递推到第n个元素，j被保留的概率=j被选中的概率$\times$j不被替换的概率
-$$\frac{k}{j} \times \frac{j}{j+1} \times \frac{j+1}{j+2} \times \dots \times \frac{n-2}{n-1} \times \frac{n-1}{n} = \frac{k}{n}$$
 
 ---
 
@@ -62,8 +42,3 @@ $$\frac{k}{j} \times \frac{j}{j+1} \times \frac{j+1}{j+2} \times \dots \times \f
 - O(N ${ \times }$ logN)&emsp;&emsp;&emsp;升序排序，取最大的k个
 - O(N + K ${ \times }$ logN)&emsp;自定义大根堆，从希望上建立大根堆，将最大的k个数交换到数组末尾
 - O(n + k ${ \times }$ logk)&emsp;&emsp;拿到第len-k小的数num，遍历数组收集大于num的数，补齐等于num的数
-
-##### 蓄水池算法
-
-&emsp;&emsp;假设有一个源源吐出不同球的机器，只有装下10个球的袋子，每一个吐出的球，要么放入袋子，要么永远扔掉。如何做到机器吐出每一个球之后，所有吐出的球都等概率被放进袋子里。
-&emsp;&emsp;对k之前和之后的元素，按照被保留的概率 = 被选中的概率$\times$不被替换的概率，对每一个新输入的元素按照概率进行替换。
