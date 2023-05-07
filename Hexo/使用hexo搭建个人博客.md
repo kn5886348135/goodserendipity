@@ -40,6 +40,15 @@ git clone https://github.com/theme-next/hexo-theme-next themes/next
 
 &emsp;&emsp;clone仓库{username}.github.io，用Nginx代理访问。
 
+#### hexo插件
+
+- hexo-admin
+- hexo-generator-archive
+- hexo-generator-feed
+- hexo-generator-search
+- hexo-generator-tag
+- hexo-generator-sitemap
+
 #### 管理多个ssh账号
 
 &emsp;&emsp;新建~/.ssh/config文件，按照ssh协议规定的格式记录相关账号信息。

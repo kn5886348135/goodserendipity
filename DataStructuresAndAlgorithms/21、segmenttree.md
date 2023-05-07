@@ -10,7 +10,7 @@ tags: [线段树, segment tree]
 &emsp;&emsp;线段树适用于可以根据左右节点的信息加工，并且加工的时间复杂度O(1)，不需要知道左右子树的具体信息，解决区间查询、更新类的问题的场景。
 &emsp;&emsp;任意数组arr的长度为n，存在k，满足2^k^ - 1 &le; n  &le; 2^k+1^ - 1。则这个数组的所有元素可以填充在高度为k+1的满二叉树叶子节点上，并且满二叉树的最下面一层最右边填充n - 2^k^ + 1个空节点。
 ![segment tree](https://www.goodserendipity.com/asserts/data-structures-and-algorithms/segmenttree.svg)
-&emsp;&emsp;lazy数组 懒更新数组，i节点task1任务的preLeft、preRight包含$i \times 2$或者$(i \times 2+1)$节点的left、right，即preLeft &le; left &amp;&amp; preRight &ge; right，则任务不再继续下发，否则任务下发。如果task2任务来到i节点并且i节点的task1任务没有下发，则先下发task1任务再执行task2。
+&emsp;&emsp;lazy数组，i节点task1任务的preLeft、preRight包含$i \times 2$或者$(i \times 2+1)$节点的left、right，即preLeft &le; left &amp;&amp; preRight &ge; right，则任务不再继续下发，否则任务下发。如果task2任务来到i节点并且i节点的task1任务没有下发，则先下发task1任务再执行task2。
 
 ---
 
@@ -18,9 +18,9 @@ tags: [线段树, segment tree]
 
 &emsp;&emsp;给定一个数组arr，实现如下三个方法，要求时间复杂度都是O(logN)
 
-1. void add(int L, int R, int V) :  让数组arr[L…R]上每个数都加上V
-2. void update(int L, int R, int V) :  让数组arr[L…R]上每个数都变成V
-3. int sum(int L, int R) :让返回arr[L…R]这个范围整体的累加和
+1. void add(int left, int right, int value) :  让数组arr[left ${ \dots }$ right]上每个数都加上value
+2. void update(int left, int right, int value) :  让数组arr[left ${ \dots }$ right]上每个数都变成value
+3. int sum(int left, int right) :让返回arr[left ${ \dots }$ right]这个范围整体的累加和
 
 ### 积方块问题 LeetCode699
 
