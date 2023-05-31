@@ -6,7 +6,7 @@ categories: 数据结构与算法
 tags: [manacher]
 ---
 
-&emsp;&emsp;[manacher](https://oi-wiki.org/string/manacher/)算法，利用已经获得的最右回文边界，减少回文字符串的比较。当以某个字符为中心的回文半径特别长的时候，后续的字符到最右回文边界前才可以利用这个特性。给定一个长度为 n 的字符串 s，请找到所有对 (i, j) 使得子串 s[i $\dots$ j] 为一个回文串。当 t = t$_{\text{rev}}$ 时，字符串 t 是一个回文串（t$_{\text{rev}}$ 是 t 的反转字符串），时间复杂度O(N)。
+&emsp;&emsp;[manacher](https://oi-wiki.org/string/manacher/)算法，利用已经获得的最右回文边界，减少回文字符串的比较。当以某个字符为中心的回文半径特别长的时候，后续的字符到最右回文边界前才可以利用这个特性。给定一个长度为 n 的字符串 s，请找到所有对 (i, j) 使得子串 s[i $\dots$ j] 为一个回文串。当 t = t$_{\text{rev}}$ 时，字符串 t 是一个回文串（t$_{\text{rev}}$ 是 t 的反转字符串），时间复杂度O(N)。[最长回文子串](https://en.wikipedia.org/wiki/Longest_palindromic_substring)(Longest palindromic substring)
 
 #### Manacher算法涉及的概念
 
