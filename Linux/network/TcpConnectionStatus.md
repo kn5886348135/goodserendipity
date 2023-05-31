@@ -31,6 +31,7 @@ tags: [network, tcp connection status]
 |LAST-ACK|LastAck|LastAck|等待对先前发送到远程 TCP 的连接终止请求的确认。 当此端点在发送其终止请求之前收到终止请求时，将进入此状态。|
 |TIME-WAIT|TimeWt|TimeWait|等待足够的时间以确保远程 TCP 收到其连接终止请求的确认。|
 |CLOSED|Closed|Closed|表示完全没有连接状态|
+
 &emsp;&emsp;TCP三次握手、四次挥手
 ![tcp连接数据包交换](https://www.goodserendipity.com/asserts/linux/network/packet-exchange-for-tcp-connection.webp)
 
