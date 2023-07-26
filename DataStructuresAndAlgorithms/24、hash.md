@@ -40,7 +40,7 @@ $$\begin{array}{l}
     p=(1-e^-(\frac{n \times k}{m}))^k \\
   \end{array}$$
 
-&emsp;&emsp;k个hash函数可以由i ${ \times }$ a + b得到，a、b是两个不同的hash函数，1 &le; i &le; k。a、b没有任何要求，hash结果是字符串，可以使用guava的BloomFilter拿到取模后的结果在redis进行bitmap的getbit操作，setbit操作要保证原子性。也可以让redis加载[RedisBloom](https://github.com/RedisBloom/RedisBloom)，使用spring-data-redis客户端实现BloomFilter。redis的bitMap部分操作会阻塞，如果有必要可以进行缓存预热。某些场景可以将比较大的bitmap拆分成几个小的bitmap，并使用lua脚本进行操作。
+&emsp;&emsp;k个hash函数可以由i ${ \times }$ a + b得到，a、b是两个不同的hash函数，1 &le; i &le; k。a、b没有任何要求，hash结果是字符串，可以使用guava的BloomFilter拿到取模后的结果在redis进行bitmap的getbit操作，setbit操作要保证原子性。但是guava的BloomFilter是单机的，可以通过MurMurHash等hash算法拿到hashCode再进行redis的bitmap操作实现BloomFilter集群。也可以让redis加载[RedisBloom](https://github.com/RedisBloom/RedisBloom)，使用spring-data-redis客户端实现BloomFilter集群。redis的bitMap部分操作会阻塞，如果有必要可以进行缓存预热。某些场景可以将比较大的bitmap拆分成几个小的bitmap，并使用lua脚本进行操作。
 
 #### 一致性hash
 
