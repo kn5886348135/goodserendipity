@@ -88,3 +88,4 @@ AVL Tree删除节点
 &emsp;&emsp;[伸展树](https://zh.wikipedia.org/zh-hans/%E4%BC%B8%E5%B1%95%E6%A0%91)(Splay Tree)是一种能够自我平衡的二叉查找树，它能在均摊$\Theta(logn)$的时间内完成基于伸展（Splay）操作的插入、查找、修改和删除操作。它是由丹尼尔·斯立特（Daniel Sleator）和罗伯特·塔扬在1985年发明的。
 &emsp;&emsp;[Patricia Trie](https://github.com/krareT/trkdb/wiki/Dynamic-Patricia-Trie)
 &emsp;&emsp;mysql等关系数据库用到的有序表比如B+Tree无法拆分成分布式结构，所有都是单实例的。[mysql8的分布式功能](https://dev.mysql.com/doc/refman/8.0/en/group-replication.html)怎么理解？
+&emsp;&emsp;[<font color="red">AVL Tree的优化</font>](https://zhuanlan.zhihu.com/p/454080520)(待验证)
