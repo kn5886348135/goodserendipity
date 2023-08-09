@@ -14,6 +14,7 @@ tags: [skip list, 二叉搜索树]
 3. 思想是所有有序表中最先进的
 4. 结构简单就是多级单链表
 5. 查询平均时间复杂度$\Theta(logn)$，插入和修改的期望时间复杂度$\Theta(logn)$，期望空间复杂度$\Theta(n)$，最坏空间复杂度$\Theta(nlogn)$，[SkipList的复杂度证明](https://oi-wiki.org/ds/skiplist/)
+6. 范围查找时，跳表的时间复杂度优于红黑树
 
 ### 跳表的实现
 
@@ -33,3 +34,35 @@ tags: [skip list, 二叉搜索树]
 3. JDK中ConCurrentSkipListMap对SkipList的实现
 
 &emsp;&emsp;Java 8 ConCurrentSkipListMap是对SkipList的一个变种的、无锁并发实现，无锁并发相关的论文Tim Harris [A pragmatic implementation of non-blocking linked lists](https://www.cl.cam.ac.uk/research/srg/netos/papers/2001-caslists.pdf)和Maged Michael [High Performance Dynamic Lock-Free Hash Tables and List-Based Sets](https://docs.rs/crate/crossbeam/0.2.4/source/hash-and-skip.pdf)，[Mikhail Fomitchev的论文](http://www.cse.yorku.ca/~ruppert/Mikhail.pdf)，[Keir Fraser的论文](https://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-579.pdf), [Hakan Sundell的论文](https://research.chalmers.se/en/person/phs)
+
+#### 子数组累加和在某个区间的数量
+
+&emsp;&emsp;给定一个数组arr，和两个整数a和b（a<=b）。求arr中有多少个子数组，累加和在[a,b]这个范围上，返回达标的子数组数量。
+
+> 1. 归并排序
+> 2. 前缀和数组
+> 3. 暴力O(N^3^)
+> 4. 改写SBT
+
+#### 滑动窗口的中位数
+
+&emsp;&emsp;求滑动窗口每一个窗口状态的中位数
+
+> 1. L是滑动窗口最左位置、R是滑动窗口最右位置，一开始LR都在数组左侧
+> 2. 任何一步都可能R往右动，表示某个数进了窗口
+> 3. 任何一步都可能L往右动，表示某个数出了窗口
+
+#### 设计$\Theta(logN)$的数据结构
+
+&emsp;&emsp;设计一个结构包含如下方法，要求时间复杂度都是$\Theta(logN)$
+
+> 1. void add(int index, int num)：把num加入到index位置
+> 2. int get(int index) ：取出index位置的值
+> 3. void remove(int index) ：把index位置上的值删除
+
+### 改写有序表的核心
+
+1. 增加某个数据项可以支持题目，例如子数组累加和在某个区间的数量的问题
+2. 有序表一定要保持内部参与排序的key不重复
+3. 平衡性调整时，正确更新增加的数据项
+4. 在搜索二叉树上实现
