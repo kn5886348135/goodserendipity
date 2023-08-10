@@ -29,11 +29,19 @@ tags: [B-Tree]
 
 ### B-Tree的查找
 
+// TODO
+
 ### B-Tree的遍历
+
+// TODO
 
 ### B-Tree的插入
 
+// TODO
+
 ### B-Tree的删除
+
+// TODO
 
 ### B-Tree的优点
 
@@ -44,7 +52,7 @@ tags: [B-Tree]
 &emsp;&emsp;AVL Tree，Red-Black Tree这些搜索二叉树的每个节点只能容纳一个数据，导致树的高度很高，逻辑上挨着的节点数据可能离得很远。
 
 &emsp;&emsp;读写磁盘与内存的不同
->
+
 > 1. 读写磁盘的速度相比内存读写慢很多。
 > 2. 每次读写磁盘的单位要比读写内存的最小单位大很多。
 
