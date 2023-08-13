@@ -6,6 +6,8 @@ categories: [数据结构与算法]
 tags: [最大网络流, dinic]
 ---
 
+&emsp;&emsp;[dinic 算法](https://en.wikipedia.org/wiki/Dinic%27s_algorithm)
+
 ### dinic算法
 
 1. 无向图是特殊的有向图

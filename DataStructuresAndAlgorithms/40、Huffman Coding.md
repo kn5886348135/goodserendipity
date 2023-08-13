@@ -6,4 +6,4 @@ categories: [数据结构与算法]
 tags: [huffman, 哈夫曼]
 ---
 
-哈夫曼树
+&emsp;&emsp;[哈夫曼树](https://en.wikipedia.org/wiki/Huffman_coding)

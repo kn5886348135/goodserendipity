@@ -5,7 +5,7 @@ date: 2023-08-01 14:35:05
 categories: 数据结构与算法
 tags: [B+Tree]
 ---
-&emsp;&emsp;[B+ 树](https://oi-wiki.org/ds/bplus-tree/)([B+Tree](https://en.wikipedia.org/wiki/B-tree))是一种 m 叉排序树，每个节点的子节点数量可变，但通常有大量子节点。B+ 树由根、内部节点和叶子组成。根可以是叶子，也可以是具有两个或更多子节点的节点。[B+Tree的C++实现bplustree](https://github.com/begeekmyfriend/bplustree)。
+&emsp;&emsp;[B+ 树](https://oi-wiki.org/ds/bplus-tree/)([B+Tree](https://en.wikipedia.org/wiki/B-tree))是一种 m 叉排序树，降低了索引结构的深度，避免传统二叉树结构中绝大部分的随机访问操作，从而有效减少了磁盘磁头的寻道次数，降低了外存访问延迟对性能的影响。每个节点的子节点数量可变，但通常有大量子节点。B+ 树由根、内部节点和叶子组成。根可以是叶子，也可以是具有两个或更多子节点的节点。B+树是1970年Rudolf Bayer教授在[Organization and Maintenance of Large Ordered Indices](https://www.goodserendipity.com/asserts/data-structures-and-algorithms/Organization%20and%20maintenance%20of%20large%20ordered%20indices.pdf)中提出的。[B+Tree的C++实现bplustree](https://github.com/begeekmyfriend/bplustree)。
 
 &emsp;&emsp;B+ 树可以被视为 B 树，但每个节点仅包含键（而不是键值对），并且在底部添加了具有链接叶子节点的指针。
 
@@ -46,13 +46,41 @@ tags: [B+Tree]
 
 ### B+Tree的并发控制
 
+&emsp;&emsp;索引结构作为影响系统性能的关键因素之一，对数据库系统在高并发场景下的性能表现具有重大的影响。从1970年B+树提出至今，学术界有大量论文尝试优化B+树在多线程场景下的性能，这些文章被广泛发表在数据库/系统领域顶级会议VLDB/SIGMOD/EuroSys上。
+[B+树并发控制机制的前世今生](https://zhuanlan.zhihu.com/p/414141859)讲述了B+树的并发控制历史，参考文献
+
+1. Bayer R, Mccreight E. [Organization and Maintenance of Large Ordered Indices](https://www.goodserendipity.com/asserts/data-structures-and-algorithms/Organization%20and%20maintenance%20of%20large%20ordered%20indices.pdf)// ACM Sigfidet. ACM, 1970:107-141.
+2. Samadi B. B-trees in a system with multiple users ☆[J]. Information Processing Letters, 1976, 5(4):107-112.
+3. Bayer R, Schkolnick M. Concurrency of operations on B -trees[J]. Acta Informatica, 1977, 9(1):1-21.
+4. Lehman P L, Yao S B. Efficient locking for concurrent operations on B-trees[J]. Acm Transactions on Database Systems, 1981, 6(4):650-670.
+5. Memory Latencies on Intel® Xeon® Processor E5-4600 and E7-4800 product families <https://software.intel.com/en-us/blogs/2014/01/28/memory-latencies-on-intel-xeon-processor-e5-4600-and-e7-4800-product-families>
+6. Cha S K, Hwang S, Kim K, et al. Cache-Conscious Concurrency Control of Main-Memory Indexes on Shared-Memory Multiprocessor Systems[J]. Proc of Vldb, 2001:181–190.
+7. K. Fraser. Practical lock-freedom. Technical Report UCAM- CL-TR-579, University of Cambridge Computer Laboratory, 2004.
+8. Mao Y, Kohler E, Morris R T. Cache craftiness for fast multicore key-value storage[C]// ACM European Conference on Computer Systems. ACM, 2012:183-196.
+
+#### 并发控制机制的基本要求
+
 1. 正确的读操作：
     1. 不会读到一个处于中间状态的键值对：读操作访问中的键值对正在被另一个写操作修改
     2. 不会找不到一个存在的键值对：读操作正在访问某个树节点，这个树节点上的键值对同时被另一个写操作（分裂/合并操作）移动到另一个树节点，导致读操作没有找到目标键值对
 2. 正确的写操作：两个写操作不会同时修改同一个键值对
 3. 无死锁：不会出现死锁：两个或多个线程发生永久堵塞（等待），每个线程都在等待被其他线程占用并堵塞了的资源
 
+#### 锁分类
+
+1. SL (Shared Lock): 共享锁 — 加锁
+2. SU (Shared Unlock): 共享锁 — 解锁
+3. XL (Exclusive Lock): 互斥锁 — 加锁
+4. XU (Exclusive Unlock): 互斥锁 — 解锁
+5. SXL (Shared Exclusive Lock): 共享互斥锁 — 加锁
+6. SXU (Shared Exclusive Unlock): 共享互斥锁 — 解锁
+7. safe nodes：判断依据为该节点上的当前操作是否会影响祖先节点。以传统B+树为例
+    1. 对于插入操作，当键值对的数量小于M时，插入操作不会触发分裂操作，该节点属于safe node；反之当键值对数量等于M时，该节点属于unsafe node；
+    2. 对于删除操作，当键值对的数量大于 $\frac{M}{2}$ 时，不会触发合并操作，该节点属于safe node；反之当键值对数量等于 $\frac{M}{2}$ 时，该节点属于unsafe node。当然，对于MySQL而言，一个节点是否是安全节点取决于键值对的大小和页面剩余空间大小等多个因素，详细代码可查询MySQL5.7的btr_cur_will_modify_tree()函数。
+
 ### LSM
+
+&emsp;&emsp;LSM Tree 则采取读写分离的策略，会优先保证写操作的性能；其数据首先存储内存中，而后需要定期 Flush 到硬盘上。LSM-Tree 通过内存插入与磁盘的顺序写，来达到最优的写性能，因为这会大大降低磁盘的寻道次数，一次磁盘 IO 可以写入多个索引块。HBase, Cassandra, RockDB, LevelDB, SQLite 等都是基于 LSM Tree 来构建索引的数据库；LSM Tree 的树节点可以分为两种，保存在内存中的称之为 MemTable, 保存在磁盘上的称之为 SSTable。
 
 ### NV-Tree
 
@@ -67,7 +95,7 @@ tags: [B+Tree]
 
 ### 适应性哈希索引
 
-[参考](https://zhuanlan.zhihu.com/p/384939600)
+&emsp;&emsp;MySQL为了提高查询效率，在InnoDB中，将查询频繁的条件和索引树结果做了一个Hash映射，减少搜索B+Tree的操作。这个Hash映射就叫做自适应哈希索引(Adaptive Hash Index)，简写AHI。
 
 ### Bw-Tree
 

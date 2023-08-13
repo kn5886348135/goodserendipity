@@ -6,11 +6,9 @@ categories: 数据结构与算法
 tags: [Suffix Array, 后缀数组]
 ---
 
-
-
 &emsp;&emsp;[后缀数组](https://oi-wiki.org/string/sa/)是字符串所有后缀的排序数组。 它是一种用于全文索引、数据压缩算法和文献计量学等领域的数据结构。
 
-&emsp;&emsp;后缀数组由 Manber & Myers (1990)的论文[Suffix arrays a new method for on-line string searches](https://www.goodserendipity.com/asserts/data-structures-and-algorithms/Suffix%20arrays%20a%20new%20method%20for%20on-line%20string%20searches.pdf) 引入，作为后缀树的一种简单且节省空间的替代方案。 它们是由 Gaston Gonnet 于 1987 年独立发现的，名为 PAT 阵列（Gonnet、Baeza-Yates & Snider 1992）。
+&emsp;&emsp;[Suffix Array](https://en.wikipedia.org/wiki/Suffix_array)由 Manber & Myers (1990)的论文[Suffix arrays a new method for on-line string searches](https://www.goodserendipity.com/asserts/data-structures-and-algorithms/Suffix%20arrays%20a%20new%20method%20for%20on-line%20string%20searches.pdf) 引入，作为后缀树的一种简单且节省空间的替代方案。 它们是由 Gaston Gonnet 于 1987 年独立发现的，名为 PAT 阵列（Gonnet、Baeza-Yates & Snider 1992）。
 
 &emsp;&emsp;[李志泽](https://zhizeli.github.io/)、李建和霍红卫在2016年的论文[Optimal In-Place Suffix Sorting](https://www.goodserendipity.com/asserts/data-structures-and-algorithms/Optimal_inplace_suffix_sorting_Zhize_Li.pdf)给出了第一个时间复杂度 $\Theta(n)$ 、空间复杂度 $\Theta(1)$ 的后缀数组构造算法，该算法在时间和空间上都是最优的。
 

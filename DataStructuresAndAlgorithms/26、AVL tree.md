@@ -3,10 +3,10 @@ title: AVL tree
 author: Louis
 date: 2023-06-03 01:33:10
 categories: 数据结构与算法
-tags: [AVL tree,自平衡，二叉搜索树]
+tags: [AVL tree, 自平衡，二叉搜索树]
 ---
 
-&emsp;&emsp;[AVL 树](https://en.wikipedia.org/wiki/AVL_tree)，是一种自平衡的二叉搜索树，两个子树的高度差不超过1。经典的搜索二叉树，新增、删除、修改节点后没有平衡功能，在数据状况很差的时候退化成链表，同时性能退化。树上没有重复的用来排序的key值，如果有重复节点的需求，可以在一个节点内部增加数据项。
+&emsp;&emsp;[AVL 树](https://en.wikipedia.org/wiki/AVL_tree)，是一种自平衡的[二叉搜索树](https://en.wikipedia.org/wiki/Binary_search_tree)，两个子树的高度差不超过1。经典的搜索二叉树，新增、删除、修改节点后没有平衡功能，在数据状况很差的时候退化成链表，同时性能退化。树上没有重复的用来排序的key值，如果有重复节点的需求，可以在一个节点内部增加数据项。
 
 ### 搜索二叉树查询
 
