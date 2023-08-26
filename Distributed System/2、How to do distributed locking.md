@@ -72,16 +72,16 @@ function writeData(filename, data) {
 
 ### 使用围栏确保锁的安全
 
-&emsp;&emsp;这个问题的修复实际上非常简单：您需要在对存储服务的每个写入请求中包含一个隔离令牌。在这种情况下，防护令牌只是一个每次客户端获取锁时都会增加的数字（例如，由锁服务递增）。如下图所示：
-![隔离令牌锁](https://www.goodserendipity.com/asserts/distributed-system/fencing-tokens.png)
+&emsp;&emsp;这个问题的修复实际上非常简单：您需要在对存储服务的每个写入请求中包含一个栅栏令牌。在这种情况下，防护令牌只是一个每次客户端获取锁时都会增加的数字（例如，由锁服务递增）。如下图所示：
+![栅栏令牌锁](https://www.goodserendipity.com/asserts/distributed-system/fencing-tokens.png)
 
 &emsp;&emsp;客户端 1 获取租约并获得令牌 33，但随后它进入长时间暂停状态并且租约到期。客户端 2 获取租约，获取令牌 34（数字始终增加），然后将其写入发送到存储服务，包括 34 的令牌。稍后，客户端 1 恢复正常并将其写入发送到存储服务 ，包括其令牌值 33。但是，存储服务器记得它已经处理了具有更高令牌编号 (34) 的写入，因此它拒绝具有令牌 33 的请求。
 
 &emsp;&emsp;请注意，这要求存储服务器主动检查令牌，并拒绝令牌已倒退的任何写入。 但一旦你掌握了窍门，这并不是特别难。 如果锁服务生成严格单调递增的令牌，则这使得锁是安全的。 例如，如果您使用 ZooKeeper 作为锁服务，则可以使用 zxid 或 znode 版本号作为 fencing 令牌，这样就处于良好状态 [ZooKeeper: Distributed Process Coordination](https://www.goodserendipity.com/asserts/zookeeper/O'Reilly.ZooKeeper.Distributed%20process%20coordination.2013.pdf)。
 
-&emsp;&emsp;然而，这给我们带来了 Redlock 的第一个大问题：它没有任何生成隔离令牌的工具。该算法不会产生任何保证每次客户端获取锁时都会增加的数字。这意味着即使该算法在其他方面很完美，使用起来也不安全，因为在一个客户端暂停或其数据包延迟的情况下，您无法阻止客户端之间的竞争条件。
+&emsp;&emsp;然而，这给我们带来了 Redlock 的第一个大问题：它没有任何生成栅栏令牌的工具。该算法不会产生任何保证每次客户端获取锁时都会增加的数字。这意味着即使该算法在其他方面很完美，使用起来也不安全，因为在一个客户端暂停或其数据包延迟的情况下，您无法阻止客户端之间的竞争条件。
 
-&emsp;&emsp;对我来说，如何改变 Redlock 算法来开始生成隔离令牌并不明显。它使用的唯一随机值不能提供所需的单调性。仅仅在一个 Redis 节点上保留一个计数器是不够的，因为该节点可能会发生故障。在多个节点上保留计数器意味着它们会不同步。您可能需要一个共识算法来生成隔离令牌。（如果只增加一个计数器很简单就好了。）
+&emsp;&emsp;对我来说，如何改变 Redlock 算法来开始生成栅栏令牌并不明显。它使用的唯一随机值不能提供所需的单调性。仅仅在一个 Redis 节点上保留一个计数器是不够的，因为该节点可能会发生故障。在多个节点上保留计数器意味着它们会不同步。您可能需要一个共识算法来生成栅栏令牌。（如果只增加一个计数器很简单就好了。）
 
 ### 利用时间达成共识
 
@@ -141,11 +141,11 @@ function writeData(filename, data) {
 
 &emsp;&emsp;我认为 Redlock 算法是一个糟糕的选择，因为它“不伦不类”：对于效率优化锁来说，它不必要地重量级和昂贵，但对于正确性依赖于锁的情况来说，它不够安全。
 
-&emsp;&emsp;特别是，该算法对时序和系统时钟做出了危险的假设（本质上假设同步系统具有有限的网络延迟和有限的操作执行时间），如果不满足这些假设，则会违反安全属性。此外，它缺乏生成隔离令牌的工具（保护系统免受网络延迟或暂停进程中的长时间延迟的影响）。
+&emsp;&emsp;特别是，该算法对时序和系统时钟做出了危险的假设（本质上假设同步系统具有有限的网络延迟和有限的操作执行时间），如果不满足这些假设，则会违反安全属性。此外，它缺乏生成栅栏令牌的工具（保护系统免受网络延迟或暂停进程中的长时间延迟的影响）。
 
 &emsp;&emsp;如果您仅需要尽力而为的基础上的锁（作为效率优化，而不是为了正确性），我建议坚持使用简单的 Redis 单节点锁定算法（有条件的setnx获取锁，原子删除 delete-if-value-matches 来释放锁），并在代码中非常清楚地记录这些锁只是近似的，有时可能会失败。不必费心设置五个 Redis 节点的集群。
 
-&emsp;&emsp;另一方面，如果您需要锁来确保正确性，请不要使用 Redlock。相反，请使用适当的共识系统，例如 ZooKeeper，可能通过实现了锁的Curator 配方之一。（至少，使用具有合理事务保证的数据库 [PostgreSQL](https://www.postgresql.org/)。）并且请在锁定下的所有资源访问上强制使用隔离令牌。
+&emsp;&emsp;另一方面，如果您需要锁来确保正确性，请不要使用 Redlock。相反，请使用适当的共识系统，例如 ZooKeeper，可能通过实现了锁的Curator 配方之一。（至少，使用具有合理事务保证的数据库 [PostgreSQL](https://www.postgresql.org/)。）并且请在锁定下的所有资源访问上强制使用栅栏令牌。
 
 &emsp;&emsp;正如我一开始所说，如果使用得当，Redis 是一个出色的工具。上述任何一项都不会削弱 Redis 对其预期用途的实用性。Salvatore(redis的作者) 多年来一直致力于该项目，其成功是当之无愧的。 但每种工具都有局限性，了解它们并做出相应的规划非常重要。
 
@@ -154,3 +154,5 @@ function writeData(filename, data) {
 &emsp;&emsp;感谢 [Kyle Kingsbury](https://aphyr.com/)、[Camille Fournier](https://twitter.com/skamille)、[Camille Fournier的个人站点](https://www.camilletalk.com/)、[Flavio Junqueira](https://cncf.pravega.io/) 和 [Salvatore Sanfilippo](http://antirez.com/latest/0) 审阅本文草稿。当然，任何错误都是我的。
 
 &emsp;&emsp;2016 年 2 月 9 日更新:Redlock 的原作者 Salvatore 发表了对本文的反驳（另见 [HN 讨论](https://news.ycombinator.com/item?id=11065933)）。他提出了一些很好的观点，但我坚持我的结论。 如果有时间，我可能会在后续文章中详细阐述，但请形成您自己的意见 - 并请查阅下面的参考文献，其中许多参考文献都经过了严格的学术同行评审（与我们的任何一篇博客文章不同）。
+
+&emsp;&emsp;<font color="red">原文末尾有一些非常有价值的评论，可以参考。</font>
