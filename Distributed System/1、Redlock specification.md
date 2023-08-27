@@ -158,4 +158,4 @@ end
 
 ### Redlock的分析
 
-&emsp;&emsp;Martin Kleppmann 的 [How to do distributed locking](https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html) 分析过 Redlock。与此分析相反的观点[Is Redlock safe?](http://antirez.com/news/101)。
+&emsp;&emsp;Martin Kleppmann 的 [How to do distributed locking](https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html) 分析过 Redlock。与此分析相反的观点[Is Redlock safe?](http://antirez.com/news/101)。翻译[How to do distributed locking](https://www.goodserendipity.com/2023/08/16/Distributed%20System/2%E3%80%81How%20to%20do%20distributed%20locking/)，[Is Redlock safe?](https://www.goodserendipity.com/2023/08/26/Distributed%20System/3%E3%80%81Is%20Redlock%20safe/)

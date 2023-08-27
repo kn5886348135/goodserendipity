@@ -156,3 +156,9 @@ function writeData(filename, data) {
 &emsp;&emsp;2016 年 2 月 9 日更新:Redlock 的原作者 Salvatore 发表了对本文的反驳（另见 [HN 讨论](https://news.ycombinator.com/item?id=11065933)）。他提出了一些很好的观点，但我坚持我的结论。 如果有时间，我可能会在后续文章中详细阐述，但请形成您自己的意见 - 并请查阅下面的参考文献，其中许多参考文献都经过了严格的学术同行评审（与我们的任何一篇博客文章不同）。
 
 &emsp;&emsp;<font color="red">原文末尾有一些非常有价值的评论，可以参考。</font>
+
+1. Martin提出的fencing token的方案，需要对提供共享资源的服务进行修改，这在现实中可行吗？
+2. 根据Martin的说法，看起来，如果资源服务器实现了fencing token，它在分布式锁失效的情况下也仍然能保持资源的互斥访问。这是不是意味着分布式锁根本没有存在的意义了？
+3. 资源服务器需要检查fencing token的大小，如果提供资源访问的服务也是包含多个节点的（分布式的），那么这里怎么检查才能保证fencing token在多个节点上是递增的呢？
+4. Martin对于fencing token的举例中，两个fencing token到达资源服务器的顺序颠倒了（小的fencing token后到了），这时资源服务器检查出了这一问题。如果客户端1和客户端2都发生了GC pause，两个fencing token都延迟了，它们几乎同时到达了资源服务器，但保持了顺序，那么资源服务器是不是就检查不出问题了？这时对于资源的访问是不是就发生冲突了？
+5. 分布式锁+fencing的方案是绝对正确的吗？能证明吗？
